@@ -116,7 +116,7 @@ unionRegex ::=	unionRegex:r1 UNION simpleRegex:r2
             ;
 
 
-simpleRegex ::= concateList:l  
+simpleRegex ::= concateList:l
             {: RESULT = new ConcatenationNode(l);
             :}
             ;

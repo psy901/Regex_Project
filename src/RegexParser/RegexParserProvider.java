@@ -32,38 +32,11 @@ public class RegexParserProvider {
 	private String inputAsString;
 	public static RegexParserProvider test;
 
-	public RegexParserProvider(String[] args) {
+	public RegexParserProvider(String regex) {
 		// check for command-line args
-		if (args.length == 1) {
-			isFile = false;
-			inputAsString = args[0];
-			System.out.println("the String to be parsed is " + args[0]);
-		} else if (args.length == 2) {
-			isFile = true;
-			System.out
-					.println("the input file to be parsed is " + args[0] + "\nthe unparsed output file is " + args[1]);
-		} else {
-			System.err.println("For file input/output, please supply name of file to be parsed "
-					+ "and name of file for unparsed version in two args.\nFor String input, use one arg");
-			System.exit(-1);
-		}
+		inputAsString = regex;
+		System.out.println("the String to be parsed is " + regex);
 		// open input file
-		if (args.length == 2) {
-			try {
-				inFile = new FileReader(args[0]);
-			} catch (FileNotFoundException ex) {
-				System.err.println("File " + args[0] + " not found.");
-				System.exit(-1);
-			}
-			// open output file
-			outFile = null;
-			try {
-				outFile = new PrintWriter(args[1]);
-			} catch (FileNotFoundException ex) {
-				System.err.println("File " + args[1] + " could not be opened for writing.");
-				System.exit(-1);
-			}
-		}
 	}
 
 	public RegexParserProvider(FileReader reader) {
@@ -118,44 +91,8 @@ public class RegexParserProvider {
 		return node;
 	}
 
-	public RegexListNode process() {
-		List<RegexNode> list = new LinkedList<RegexNode>();
-		if (isFile) {
-			try (BufferedReader br = new BufferedReader(inFile)) {
-				String fileLine;
-				while ((fileLine = br.readLine()) != null) {
-					// process the line.
-					System.out.println("Line to be parsed is: " + fileLine);
-					try {
-						list.add(filterModifiers(fileLine));
-
-						// outFile.println(fileLine);
-					} catch (NullPointerException e) {
-						System.out.println("Cannot be parsed: " + fileLine);
-						continue;
-					}
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			list.add(filterModifiers(inputAsString));
-		}
-
-		RegexListNode rlist = new RegexListNode(list);
-		return rlist;
-	}
-
-	/**
-	 * This is a general method that print root according to its type(whether it
-	 * is a String or a File)
-	 */
-	public static void printAllNodes(RegexListNode root) {
-		if (isFile) {
-			toFile(root);
-		} else {
-			toStringBuilder(root, true);
-		}
+	public RegexNode process() {
+		return filterModifiers(inputAsString);
 	}
 
 	public static void toFile(RegexListNode root) {
@@ -175,7 +112,7 @@ public class RegexParserProvider {
 	 *            is can be set to true if you want to print the output in the
 	 *            console
 	 */
-	public static StringBuilder toStringBuilder(RegexListNode root, boolean printString) {
+	public static StringBuilder toStringBuilder(RegexNode root, boolean printString) {
 		if (!isFile) {
 			StringBuilder s = new StringBuilder();
 			root.toString(s);
@@ -190,32 +127,8 @@ public class RegexParserProvider {
 		}
 	}
 
-	public static List<RegexNode> parse(String[] args) {
-		test = new RegexParserProvider(args);
-		RegexListNode root = test.process();
-		return root.getList();
-
-	}
-
-	public static List<RegexNode> parse(FileReader reader) {
-		test = new RegexParserProvider(reader);
-		RegexListNode root = test.process();
-		return root.getList();
-	}
-
 	public static void main(String[] args) {
-		List<RegexNode> nodes = parse(args);
 
-		// next two lines direct output to file
-		RegexListNode a = new RegexListNode(nodes);
-		printAllNodes(a);
-
-		// These lines print output
-		// StringBuilder s = new StringBuilder();
-		// for(RegexNode node: nodes){
-		// node.toString(s);
-		// }
-		// System.out.println(s.toString());
 
 	}
 
