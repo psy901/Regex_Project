@@ -29,4 +29,9 @@ public class StarNode extends RegexNode {
 	// one kid
 	protected RegexNode myRegex1;
 
+	@Override
+	public String toCleanString() {
+		return myRegex1.toCleanString() + "*";
+	}
+
 }

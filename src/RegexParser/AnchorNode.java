@@ -62,4 +62,9 @@ public class AnchorNode extends RegexNode{
 	protected RegexNode myRegex1;
 	protected boolean start;
 	protected boolean end;
+	@Override
+	public String toCleanString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

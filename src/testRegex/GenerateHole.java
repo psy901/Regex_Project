@@ -16,88 +16,26 @@ public class GenerateHole {
 			generatedList = generateUnion((UnionNode) regex);
 		} else if(regex instanceof StarNode) {
 			generatedList = generateStar((StarNode) regex);
+		} else if(regex instanceof PlusNode) {
+			generatedList = generatePlus((PlusNode) regex);
 		} else if(regex instanceof CharNode) {
 			generatedList = generateChar((CharNode) regex);
-
+		} else if(regex instanceof AnchorNode) {
+			generatedList = generateAnchor((AnchorNode) regex);
+		} else if(regex instanceof DotNode) {
+			generatedList = generateDot((DotNode) regex);
 		}
 		
 		return generatedList;
 	}
 	
-	
-	
 
-
-
-	
-/*
-	static List<RegexNode> generateConcat(ConcatenationNode regex) {
-		
-		int replaceRegexSize = 1;	// size of replacing sub-regex
-		List<RegexNode> generatedRegexList = new ArrayList<RegexNode>();	// list containing all generated regex
-		List<RegexNode> regexList = regex.getList();	// refers to all sub regex (e.g. in a*bc, divide into a*, b, c)
-		System.out.println("RegexList Size : " + regexList.size());
-		
-		// Generating new regex with replacing with Hole
-		while(replaceRegexSize <= regexList.size()) {
-			
-			for(int i = 0; i < regexList.size(); i ++) {	// iterate every RegexNode
-				if(i+replaceRegexSize > regexList.size())
-					continue;
-				
-				System.out.println("start index: " + i + "\n size: " + replaceRegexSize);
-				
-				List<RegexNode> prevSubreg = regexList.subList(0, i);
-				List<RegexNode> postSubreg = null;
-				if(i+replaceRegexSize < regexList.size()) {
-					postSubreg = regexList.subList(i+replaceRegexSize, regexList.size());
-				}
-
-				// if replacing sub-regex size is 1 recurse,
-				List<RegexNode> replaceSubregList;
-				if(replaceRegexSize == 1) {
-					RegexNode recurseNode = regexList.get(i);
-					replaceSubregList = generate(recurseNode);
-				}
-
-				// else if replacing size > 1, make it HoleNode
-				else {
-					replaceSubregList = new ArrayList<RegexNode>();
-					replaceSubregList.add(new HoleNode());
-				}
-
-				// iterate all possible replaceSubregList and merge with prev and sub regex
-				for(int j = 0; j < replaceSubregList.size(); j ++) {
-					RegexNode replaceNode = replaceSubregList.get(j); 
-					List<RegexNode> allSubregex = new ArrayList<RegexNode>();
-					if(prevSubreg.size() != 0) { allSubregex.addAll(prevSubreg); } 
-					allSubregex.add(replaceNode);
-					if(postSubreg != null)	{ allSubregex.addAll(postSubreg); }
-					
-					ConcatenationNode generatedRegex = new ConcatenationNode(allSubregex);
-					generatedRegexList.add(generatedRegex);
-
-					// TODO -- testing
-					StringBuilder s = new StringBuilder();
-					generatedRegex.toString(s);
-					System.out.println(s.toString());
-				}
-			}
-			replaceRegexSize++;
-			
-		}	// while loop ends here
-		return generatedRegexList;
-	}
-
-*/
-
-	
-	
 	static List<RegexNode> generateConcat(ConcatenationNode regex) {
 		System.out.println("Concat call");
 		List<RegexNode> generatedRegexList = new ArrayList<RegexNode>();	// list containing all generated regex
 		List<RegexNode> regexList = regex.getList();	// refers to all sub regex (e.g. in a*bc, divide into a*, b, c)
 		
+		System.out.println("regexlist size :" + regexList.size());
 		for(int i = 1; i < regexList.size() + 1; i ++) {	// loop for replacing regex size 
 			for(int j = 0; j < regexList.size() + 1 - i; j ++) {
 				List<RegexNode> tmpList = new ArrayList<RegexNode>();	// tmp list for collecting
@@ -114,15 +52,21 @@ public class GenerateHole {
 						tmpList.addAll(preRegex);
 						tmpList.add(tmpNode);
 						tmpList.addAll(postRegex);
-						generatedRegexList.add(new ConcatenationNode(tmpList));
+//						System.out.println("Adding in size 1: ");
+						ConcatenationNode node = new ConcatenationNode(tmpList);
+//						printNode(node);
+						generatedRegexList.add(node );
 					}
 				}
 				// else, just replace with HoleNode
 				else {
+//					System.out.println("Adding in size " + i + ": ");
 					tmpList.addAll(preRegex);
 					tmpList.add(new HoleNode());
 					tmpList.addAll(postRegex);
-					generatedRegexList.add(new ConcatenationNode(tmpList));
+					ConcatenationNode node = new ConcatenationNode(tmpList);
+//					printNode(node);
+					generatedRegexList.add(node);
 				}
 			}
 		}
@@ -146,14 +90,21 @@ public class GenerateHole {
 		}
 		// entire star becomes hole
 		generatedRegexList.add(new HoleNode());
-//		System.out.println("/////");
-//		printAll(generatedRegexList);
-//		System.out.println("/////");
 		return generatedRegexList;
 	}
 	
 	static List<RegexNode> generatePlus(PlusNode regex) {
-		
+		System.out.println("Plus call");
+
+		List<RegexNode> generatedRegexList = new ArrayList<RegexNode>();	// list containing all generated regex
+		List<RegexNode> replaceRegex = generate(regex.getMyRegex1());
+
+		for(RegexNode tmpNode : replaceRegex) {
+			generatedRegexList.add(new PlusNode(tmpNode));
+		}
+		// entire star becomes hole
+		generatedRegexList.add(new HoleNode());
+		return generatedRegexList;
 	}
 	
 	static List<RegexNode> generateChar(CharNode regex) {
@@ -163,6 +114,19 @@ public class GenerateHole {
 		return generatedRegexList;
 	}
 	
+	private static List<RegexNode> generateDot(DotNode regex) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	private static List<RegexNode> generateAnchor(AnchorNode regex) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	
 	static void printAll(List<RegexNode> list) {
 		
 		for(RegexNode node : list) {
@@ -171,11 +135,19 @@ public class GenerateHole {
 			System.out.println(s.toString());
 		}
 	}
+	
+	static void printAllClean(List<RegexNode> list) {
+		for(RegexNode node : list) {
+			System.out.println(node.toCleanString());
+		}
+	}
+	
 	static void printNode(RegexNode regex) {
 		StringBuilder s = new StringBuilder();
 		regex.toString(s);
 		System.out.println(s.toString());
 	}
+	
 	
 	
 	

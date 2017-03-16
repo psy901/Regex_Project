@@ -101,4 +101,9 @@ public class RepetitionNode extends RegexNode {
 	protected int max;
 	protected String mode;
 	protected RegexNode myRegex1;
+	@Override
+	public String toCleanString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

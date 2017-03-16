@@ -54,4 +54,9 @@ public class ModifierNode extends RegexNode {
 
 	protected RegexNode myRegex1;
 	protected Set<Character> mySet;
+	@Override
+	public String toCleanString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

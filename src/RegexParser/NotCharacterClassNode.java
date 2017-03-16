@@ -57,4 +57,10 @@ public class NotCharacterClassNode extends RegexNode{
 	
 	private List<IntervalNode> myList;
 
+	@Override
+	public String toCleanString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

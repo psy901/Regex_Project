@@ -29,4 +29,10 @@ public class OptionalNode extends RegexNode {
 	// one kid
 	protected RegexNode myRegex1;
 
+	@Override
+	public String toCleanString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -20,13 +20,13 @@ public class ConcatenationNode extends RegexNode {
 	public void toString(StringBuilder s) {
 		Iterator<RegexNode> it = myConcateList.iterator();
 		try {
-			
+
 			while (it.hasNext()) {
 				s.append("(");
 				((RegexNode) it.next()).toString(s);
 				s.append(")");
 			}
-			
+
 		} catch (NoSuchElementException ex) {
 			System.err.println("unexpected NoSuchElementException in RegexListNode.toString");
 			System.exit(-1);
@@ -36,13 +36,13 @@ public class ConcatenationNode extends RegexNode {
 	public void unparse(PrintWriter p) {
 		Iterator<RegexNode> it = myConcateList.iterator();
 		try {
-			
+
 			while (it.hasNext()) {
 				p.print("(");
 				((RegexNode) it.next()).unparse(p);
 				p.print(")");
 			}
-			
+
 		} catch (NoSuchElementException ex) {
 			System.err.println("unexpected NoSuchElementException in RegexListNode.unparse");
 			System.exit(-1);
@@ -52,4 +52,19 @@ public class ConcatenationNode extends RegexNode {
 
 	// two kids
 	private List<RegexNode> myConcateList;
+
+	@Override
+	public String toCleanString() {
+
+		String cleanString = "";
+		Iterator<RegexNode> it = myConcateList.iterator();
+		try {
+			while (it.hasNext()) {
+				cleanString += (((RegexNode) it.next()).toCleanString());
+			}
+		} catch(Exception e) {
+
+		}
+		return cleanString;
+	}
 }

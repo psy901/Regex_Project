@@ -60,5 +60,19 @@ public class IntervalNode extends RegexNode {
 	private String mode;
 	private CharNode myChar1;
 	private CharNode myChar2;
+	
+	@Override
+	public String toCleanString() {
+		if (mode.equals("single")) {
+			return myChar1.toCleanString();
+		} else {
+			String cleanString = "";
+			cleanString += myChar1.toCleanString();
+			cleanString += "-";
+			cleanString += myChar2.toCleanString();
+			
+			return cleanString;
+		}
+	}
 
 }

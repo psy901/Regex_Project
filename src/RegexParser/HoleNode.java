@@ -52,6 +52,10 @@ public class HoleNode extends RegexNode{
 		*/
 		s.append("[ ]");
 	}
+	@Override
+	public String toCleanString() {
+		return "[]";
+	}
 	
 	
 	

@@ -23,4 +23,9 @@ public class CharNode extends RegexNode{
 	}
 	
 	protected char myChar;
+
+	@Override
+	public String toCleanString() {
+		return String.valueOf(myChar);
+	}
 }

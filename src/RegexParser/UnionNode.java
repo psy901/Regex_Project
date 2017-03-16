@@ -38,4 +38,12 @@ public class UnionNode extends RegexNode {
 	// two kids
 	protected RegexNode myRegex1;
 	protected RegexNode myRegex2;
+	@Override
+	public String toCleanString() {
+		String cleanString = "";
+		cleanString += myRegex1.toCleanString();
+		cleanString += "|";
+		cleanString += myRegex2.toCleanString();
+		return cleanString;
+	}
 }
